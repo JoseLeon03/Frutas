@@ -1,0 +1,34 @@
+###Recuperar todas las peliculas
+GET http://localhost:3000/fruits
+
+###Recuperar una pelicula por id
+GET http://localhost:3000/movies/de0e5391-f080-11ef-a4d6-cc96e5277297
+
+###Recuperar una pelicula por genero
+GET http://localhost:3000/movies?genre=Action
+
+### Crear una fruta
+POST http://localhost:3000/fruits
+Content-Type: application/json
+
+{
+    "name": "apple"
+}
+
+### Eliminar una pelicula
+DELETE http://localhost:3000/movies/77ed9819-f2de-11ef-a4d6-cc96e5277297
+
+### Actualizar una pelicula
+PATCH http://localhost:3000/movies/4348306a-f2e0-11ef-a4d6-cc96e5277297
+Content-Type: application/json
+
+{
+    "title": "Prueba",
+    "year": 1995,
+    "director": "Yo mismo soy",
+    "duration": 142,
+    "genre": ["Action", "Drama"],
+    "rate": 9.3
+}
+
+
