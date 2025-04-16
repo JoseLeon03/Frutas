@@ -19,26 +19,30 @@ export class FruitModel {
 
 
   static async create ({ input }) {
-    const {
-      name,
-    } = input
-    console.log(name)
-    // const [uuidResult] = await connection.query('Select UUID() uuid;')
-    // const [{ uuid }] = uuidResult
+    const { name } = input;
 
-    // Insert the new movie
-    try {
-      await db.execute(
-      `INSERT INTO fruits (name)
-      VALUES ( ?)`,
-      [ name]
-      )
-    } catch (e) {
-      // No debe verlo el usuario
-      throw new Error('Error creating fruits')
+    // Check if the fruit already exists
+    const validation = await db.execute(
+      `SELECT * FROM fruits WHERE name = ?`,
+      [name]
+    );
+
+    if (validation.rows.length > 0) {
+      return { success: false, message: 'Fruit already exists' }; // Response for frontend
     }
 
-    return {...input }
+    try {
+      // Insert the new fruit
+      await db.execute(
+        `INSERT INTO fruits (name) VALUES (?)`,
+        [name]
+      );
+    } catch (e) {
+      // Hide internal error details from the user
+      throw new Error('Error creating fruit');
+    }
+
+    return { success: true, message: 'Fruit created successfully', data: { ...input } }; // Success response for frontend
   }
 
   // static async delete ({ id }) {

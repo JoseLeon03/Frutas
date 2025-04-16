@@ -8,6 +8,7 @@ function App() {
   // Estado para almacenar el valor del campo de entrada (input)
   const [newFruit, setNewFruit] = useState('');
 
+
   // useEffect se activa al cargar el componente para obtener la lista de frutas
   useEffect(() => {
     axios.get('http://localhost:3000/fruits') // Hace un get a la Api para obtener la lista de frutas
@@ -20,14 +21,25 @@ function App() {
 
   // Funcion para añadir nuevas frutas
   const addFruit = () => {
-    if (newFruit.trim() === '') return; // Si el input esta vacio, no hace nada
+    if (newFruit.trim() === '') {
+      alert('Please enter a fruit name.'); // Mensaje si el input está vacío
+      return;
+    }
 
-    axios.post('http://localhost:3000/fruits', { name: newFruit }) // Hace u POST a la API para añadir una nueva fruta
+    axios.post('http://localhost:3000/fruits', { name: newFruit }) // Hace un POST a la API
       .then(response => {
-        setFruits([...fruits, response.data]);// Añade la nueva fruta a la lista
-        setNewFruit(''); // Limpia el input
+        if (response.data.success) {
+          setFruits([...fruits, response.data.data]); // Añade la nueva fruta a la lista
+          setNewFruit(''); // Limpia el input
+          alert(response.data.message); // Mensaje de éxito
+        } else {
+          alert(response.data.message); // Muestra el mensaje de error del backend
+        }
       })
-      .catch(error => console.error('Error adding fruit:', error)); // Errores
+      .catch(error => {
+        console.error('Error adding fruit:', error);
+        alert('An error occurred while adding the fruit.'); // Mensaje de error genérico
+      });
   };
 
   return (
@@ -62,4 +74,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
